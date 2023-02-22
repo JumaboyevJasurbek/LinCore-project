@@ -1,0 +1,9 @@
+{ Bu user Kursni sotib olgan vaqti certificate table ichidagi sotib olingan certificatelar royxati turadi, POST osha kurs sotib olinayotgan vaqtida boladi, 6 oyda kurs ochsa bu tabledagi malumotlar ham ochib ketadi }
+
+GET
+    cou_active tekshiriladi oldin olganmi yoqmi olgan bolsa:
+    fs.createWriteStream metodi yordamidami ( men bilgan yolim shu ) yoki boshqa yol tutib certificateni yuklab berasiz va utw_active false qilib qoyasiz
+    yoq bolsa berolmiman deysiz
+
+👇
+GET: user, yesToken
