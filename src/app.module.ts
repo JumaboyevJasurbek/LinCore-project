@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { connectDb } from './config';
+import { connectDb } from './ormconfig/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { config } from './config';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot(connectDb),
-  ],
+  imports: [ConfigModule.forRoot(config), TypeOrmModule.forRoot(connectDb)],
 })
 export class AppModule {}

@@ -1,22 +1,24 @@
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { swaggerConfig } from './config/swagger';
+import { ErrorHandle } from './filter/custom.exetepsion.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new ErrorHandle());
   app.setGlobalPrefix('api');
 
-  const config = new DocumentBuilder()
-    .setTitle('Swagger Test')
-    .setDescription('This is the test of swagger api')
-    .setVersion('1.0')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-
+  const config = app.get(ConfigService);
+  const host = config.getOrThrow('app.host');
+  const port = config.getOrThrow('app.port');
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(8080);
+  await app.listen(port, host);
 }
 bootstrap();
