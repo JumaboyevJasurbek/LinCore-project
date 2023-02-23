@@ -13,7 +13,8 @@ CREATE TABLE courses( .
     course_title varchar(100) not null unique,
     course_description text,
     course_price varchar not null,
-    categfory_sequence int not null                     # ketma ketligi uchun
+    course_sequence int not null,                     # ketma ketligi uchun
+    course_img varchar not null
 )
 
 CREATE TABLE courses_open_users ( .
