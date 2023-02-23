@@ -1,0 +1,7 @@
+{ bu table uncha muhim emas. ozini orniga ega bolgan table. Bu asosan user nechta video kordi kormadi shu uchun kerak } 
+
+POST
+    Bu bir video korish uchun ustiga bosilgandan song video ochib berishni boshlayotganda keladigan routda qoshiladi table ga videoni id si va userIDlarini qoshasiz. Har ehtimolga qarshi courses_open_users shu tabledan userID va videoni courseId sini tekshirib korin.
+
+👇
+POST: user, yesToken
