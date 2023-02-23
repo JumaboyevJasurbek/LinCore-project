@@ -1,5 +1,6 @@
 import { UserWatchVideo } from './user_watch_video.entity';
 import {
+  BaseEntity,
   Column,
   Entity,
   JoinTable,
@@ -12,7 +13,7 @@ import { CoursesOpenUsers } from './course_open_users.entity';
 import { UserTakeWorkbook } from './user_take_workbook.entity';
 
 @Entity({ name: 'users' })
-export class UserEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   user_id: string;
 
@@ -47,6 +48,8 @@ export class UserEntity {
   @Column({
     type: 'text',
     nullable: false,
+    default:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png',
   })
   image: string;
 

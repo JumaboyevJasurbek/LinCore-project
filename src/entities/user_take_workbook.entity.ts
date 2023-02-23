@@ -1,9 +1,15 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  BaseEntity,
+} from 'typeorm';
 import { UserEntity } from './user.entity';
 import { Workbook } from './workbook.entity';
 
 @Entity({ name: 'user_take_workbook' })
-export class UserTakeWorkbook {
+export class UserTakeWorkbook extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   utw_id: string;
 
