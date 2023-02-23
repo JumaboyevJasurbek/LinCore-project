@@ -75,15 +75,16 @@ export class VideoController {
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Attendance Punch In' })
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(
+  async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Headers() headers: any,
     @Body() body: CreateVideoDto,
   ) {
-    if (this.adminToken.verifyAdmin(headers)) {
+    if (await this.adminToken.verifyAdmin(headers)) {
       const bool = googleCloud(file);
       const token = jwt.sign(body.course_id);
       console.log(token);
+      console.log(bool);
     }
   }
 }
