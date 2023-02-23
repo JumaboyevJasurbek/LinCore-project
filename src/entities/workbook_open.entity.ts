@@ -1,8 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { CourseEntity } from './course.entity';
 
 @Entity({ name: 'workbook_open' })
-export class WorkbookOpen {
+export class WorkbookOpen extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   openbook_id: string;
 

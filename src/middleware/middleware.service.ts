@@ -1,28 +1,22 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
 import jwt from 'src/utils/jwt';
 
 export class TokenMiddleware {
-  constructor(
-    @InjectRepository(UserEntity)
-    private typeorm: Repository<UserEntity>,
-  ) {}
-
   async verifyAdmin(headers: any) {
     if (!headers.admin_token) {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
     const idAndEmail = jwt.verify(headers.admin_token);
-    if (idAndEmail) {
+    console.log(idAndEmail);
+    if (!idAndEmail) {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
-    const admin = await this.typeorm.findOneBy({
+    const admin = await UserEntity.findOneBy({
       user_id: idAndEmail.id,
       email: idAndEmail.email,
     });
-    if (admin.email) {
+    if (!admin.email) {
       throw new HttpException('Siz admin emassiz', HttpStatus.BAD_REQUEST);
     }
     return true;
@@ -33,14 +27,14 @@ export class TokenMiddleware {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
     const idAndEmail = jwt.verify(headers.admin_token);
-    if (idAndEmail) {
+    if (!idAndEmail) {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
-    const user = await this.typeorm.findOneBy({
+    const user = await UserEntity.findOneBy({
       user_id: idAndEmail.id,
       email: idAndEmail.email,
     });
-    if (user.email) {
+    if (!user.email) {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
     return true;

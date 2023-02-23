@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   CreateDateColumn,
   Entity,
   ManyToOne,
@@ -8,7 +9,7 @@ import { CourseEntity } from './course.entity';
 import { UserEntity } from './user.entity';
 
 @Entity({ name: 'courses_open_users' })
-export class CoursesOpenUsers {
+export class CoursesOpenUsers extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   cou_id: string;
 

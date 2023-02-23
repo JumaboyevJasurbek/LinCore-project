@@ -1,5 +1,6 @@
 import { CertificateEntity } from './certificate.entity';
 import {
+  BaseEntity,
   Entity,
   JoinColumn,
   JoinTable,
@@ -10,7 +11,7 @@ import {
 import { UserEntity } from './user.entity';
 
 @Entity({ name: 'certificate_open_user' })
-export class CertificateOpenUser {
+export class CertificateOpenUser extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   cou_id: string;
 

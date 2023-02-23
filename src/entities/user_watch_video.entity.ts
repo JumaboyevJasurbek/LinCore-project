@@ -1,9 +1,9 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { Videos } from './video.entity';
 
 @Entity({ name: 'user_watch_video' })
-export class UserWatchVideo {
+export class UserWatchVideo extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   uwv_id: string;
 
