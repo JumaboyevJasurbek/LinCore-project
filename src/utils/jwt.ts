@@ -1,3 +1,4 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
 dotenv.config();
@@ -14,7 +15,7 @@ class JwtStrategy {
       const decoded = jwt.verify(token, this.JWT_SECRET);
       return decoded;
     } catch (error) {
-      throw new Error('Invalid token');
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
   }
 }

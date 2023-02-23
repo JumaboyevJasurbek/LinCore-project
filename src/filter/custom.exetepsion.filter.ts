@@ -8,6 +8,7 @@ import {
 @Catch()
 export class ErrorHandle implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
+    console.log(exception, 'ichida');
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     if (exception instanceof HttpException) {
