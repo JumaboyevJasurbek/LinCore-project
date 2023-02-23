@@ -83,8 +83,6 @@ export class VideoController {
     if (await this.adminToken.verifyAdmin(headers)) {
       const bool = googleCloud(file);
       const token = jwt.sign(body.course_id);
-      console.log(token);
-      console.log(bool);
     }
   }
 }
