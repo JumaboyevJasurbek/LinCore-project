@@ -5,13 +5,22 @@ import { ConfigModule } from '@nestjs/config';
 import { config } from './config';
 import { VideoModule } from './module/video/video.module';
 import { CoursesModule } from './module/courses/courses.module';
+import { JwtModule } from '@nestjs/jwt';
+import * as dotenv from 'dotenv';
+import { MiddlewareModule } from './middleware/middleware.module';
+dotenv.config();
 
 @Module({
   imports: [
     ConfigModule.forRoot(config),
     TypeOrmModule.forRoot(connectDb),
+    JwtModule.register({
+      secret: process.env.SECRET_KEY,
+      signOptions: { expiresIn: '60s' },
+    }),
     VideoModule,
     CoursesModule,
+    MiddlewareModule,
   ],
 })
 export class AppModule {}

@@ -1,5 +1,15 @@
+import { VideoModule } from './../module/video/video.module';
+import { UserWatchVideo } from './../entities/user_watch_video.entity';
+import { UserTakeWorkbook } from './../entities/user_take_workbook.entity';
+import { UserEntity } from './../entities/user.entity';
+import { CoursesOpenUsers } from './../entities/course_open_users.entity';
+import { CourseEntity } from './../entities/course.entity';
+import { CertificateOpenUser } from './../entities/certificate_open_user.entity';
+import { CertificateEntity } from './../entities/certificate.entity';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
+import { Workbook } from 'src/entities/workbook.entity';
+import { WorkbookOpen } from 'src/entities/workbook_open.entity';
 dotenv.config();
 
 export const connectDb: TypeOrmModuleOptions = {
@@ -9,7 +19,18 @@ export const connectDb: TypeOrmModuleOptions = {
   password: String(process.env.DB_PASSWORD),
   username: process.env.DB_USERNAME,
   database: process.env.DATABASE,
-  entities: [__dirname + '/../entities/*.entity.{js,ts}'],
+  entities: [
+    Workbook,
+    CertificateEntity,
+    CertificateOpenUser,
+    CourseEntity,
+    CoursesOpenUsers,
+    UserEntity,
+    UserTakeWorkbook,
+    UserWatchVideo,
+    VideoModule,
+    WorkbookOpen,
+  ],
   autoLoadEntities: true,
-  synchronize: false,
+  synchronize: true,
 };

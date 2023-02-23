@@ -11,7 +11,7 @@ const storage = new Storage({
 const bucket = storage.bucket('ishladi');
 
 export const googleCloud = (file: any | any[]) => {
-  if (file.length) {
+  if (!file.length) {
     const a: any[] = [];
     a.push(file);
     const imageLink = join(v4() + extname(a[0]?.originalname));
