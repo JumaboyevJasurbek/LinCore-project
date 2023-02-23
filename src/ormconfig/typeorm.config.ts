@@ -31,6 +31,6 @@ export const connectDb: TypeOrmModuleOptions = {
     Videos,
     WorkbookOpen,
   ],
-  // autoLoadEntities: true,
+  autoLoadEntities: true,
   synchronize: true,
 };
