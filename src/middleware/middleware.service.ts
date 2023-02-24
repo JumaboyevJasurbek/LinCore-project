@@ -8,6 +8,7 @@ export class TokenMiddleware {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
     const idAndEmail = jwt.verify(headers.admin_token);
+
     if (!idAndEmail) {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
@@ -22,6 +23,7 @@ export class TokenMiddleware {
   }
 
   async verifyUser(headers: any) {
+
     if (!headers.user_token) {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
