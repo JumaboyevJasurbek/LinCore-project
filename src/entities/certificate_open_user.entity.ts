@@ -5,7 +5,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
@@ -15,16 +15,11 @@ export class CertificateOpenUser extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   cou_id: string;
 
-  @OneToMany(
-    () => CertificateEntity,
-    (certifikat) => certifikat.certificate_open,
-  )
+  @OneToOne(() => CertificateEntity)
   @JoinColumn()
   certificate_id: CertificateEntity;
 
   @ManyToMany(() => UserEntity)
-  @JoinTable({
-    name: 'certificates_open_users',
-  })
+  @JoinTable()
   user_id: UserEntity[];
 }
