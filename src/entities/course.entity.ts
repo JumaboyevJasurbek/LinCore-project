@@ -52,9 +52,9 @@ export class CourseEntity {
   @OneToMany(() => Workbook, (workbook) => workbook.workbook_course)
   workbook: Workbook[];
 
+  @OneToMany(() => Videos, (video) => video.videos_course)
+  course_videos: Videos[];
+
   @OneToMany(() => CoursesOpenUsers, (user) => user.course_id)
   open_user: CoursesOpenUsers[];
-
-  @OneToMany(() => Videos, (video) => video.video_course)
-  video: Videos[];
 }
