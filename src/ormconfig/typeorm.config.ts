@@ -1,4 +1,3 @@
-import { VideoModule } from './../module/video/video.module';
 import { UserWatchVideo } from './../entities/user_watch_video.entity';
 import { UserTakeWorkbook } from './../entities/user_take_workbook.entity';
 import { UserEntity } from './../entities/user.entity';
@@ -10,6 +9,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { Workbook } from 'src/entities/workbook.entity';
 import { WorkbookOpen } from 'src/entities/workbook_open.entity';
+import { Videos } from 'src/entities/video.entity';
 dotenv.config();
 
 export const connectDb: TypeOrmModuleOptions = {
@@ -28,7 +28,7 @@ export const connectDb: TypeOrmModuleOptions = {
     UserEntity,
     UserTakeWorkbook,
     UserWatchVideo,
-    VideoModule,
+    Videos,
     WorkbookOpen,
   ],
   autoLoadEntities: true,
