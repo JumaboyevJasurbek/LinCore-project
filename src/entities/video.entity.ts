@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -45,8 +46,9 @@ export class Videos extends BaseEntity {
   })
   video_sequence: number;
 
-  @ManyToOne(() => CourseEntity, (course) => course.video)
-  video_course: CourseEntity;
+  @ManyToOne(() => CourseEntity, (course) => course.course_videos)
+  @JoinColumn()
+  videos_course: CourseEntity;
 
   @OneToMany(() => UserWatchVideo, (watch) => watch.video_id)
   user_watch_video: UserWatchVideo[];
