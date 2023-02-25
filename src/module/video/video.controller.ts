@@ -1,3 +1,4 @@
+import { UpdateVideoDto } from './dto/update-video.dto';
 import { TokenMiddleware } from './../../middleware/middleware.service';
 import { CreateVideoDto } from './dto/create-video.dto';
 import {
@@ -7,20 +8,25 @@ import {
   HttpCode,
   HttpStatus,
   UploadedFile,
-  Headers,
   Body,
+  Get,
+  Param,
+  Headers,
+  Patch,
+  Delete,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { VideoService } from './video.service';
 import { googleCloud } from 'src/utils/google-cloud';
 import {
+  ApiBadRequestResponse,
   ApiBody,
   ApiConsumes,
   ApiHeader,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import jwt from 'src/utils/jwt';
 
 @Controller('video')
 @ApiTags('Video')
@@ -32,17 +38,16 @@ export class VideoController {
 
   @Post('/create')
   @HttpCode(HttpStatus.CREATED)
-  @ApiHeader({ name: 'admin_token', description: 'Admin Token' })
   @ApiBody({
     schema: {
       type: 'object',
       required: [
         'file',
         'title',
+        'description',
         'duration',
         'sequence',
         'course_id',
-        'description',
       ],
       properties: {
         file: {
@@ -74,17 +79,132 @@ export class VideoController {
   })
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Attendance Punch In' })
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiHeader({
+    name: 'admin_token',
+    description: 'Admin token',
+    required: true,
+  })
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Headers() headers: any,
     @Body() body: CreateVideoDto,
+    @Headers() header: any,
   ) {
-    if (await this.adminToken.verifyAdmin(headers)) {
+    if (await this.adminToken.verifyAdmin(header)) {
       const bool = googleCloud(file);
-      const token = jwt.sign(body.course_id);
-      console.log(token);
-      console.log(bool);
+      if (bool) {
+        await this.videoService.create(body, bool);
+      }
+    }
+  }
+
+  @Get('/by_course/:id')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiHeader({ name: 'user_token', description: 'optional', required: false })
+  async findAll(@Param('id') course: string, @Headers() header: any) {
+    if (header?.user_token) {
+      const userId = await this.adminToken.verifyUser(header);
+      if (userId) {
+        return await this.videoService.findAll(course, userId);
+      }
+    } else {
+      return await this.videoService.findAll(course, false);
+    }
+  }
+
+  @Get(':id')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiHeader({ name: 'user_token', description: 'optional', required: false })
+  async findOne(@Param('id') id: string, @Headers() header: any) {
+    if (header?.user_token) {
+      const userId = await this.adminToken.verifyUser(header);
+      if (userId) {
+        return await this.videoService.findOne(id, userId);
+      }
+    } else {
+      return await this.videoService.findOne(id, false);
+    }
+  }
+
+  @Patch('/update/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+        title: {
+          type: 'string',
+          default: '3-dars',
+        },
+        description: {
+          type: 'string',
+          default: 'Bugungi dars paloncha',
+        },
+        duration: {
+          type: 'string',
+          default: '30:00',
+        },
+        sequence: {
+          type: 'number',
+          default: 4,
+        },
+        course_id: {
+          type: 'string',
+          default: 'uuid',
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Attendance Punch In' })
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiHeader({
+    name: 'admin_token',
+    description: 'Admin token',
+    required: false,
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
+    @Param('id') id: string,
+    @Headers() header: any,
+    @Body() body: UpdateVideoDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    const adminId = await this.adminToken.verifyAdmin(header);
+    if (adminId) {
+      if (file) {
+        const bool = googleCloud(file);
+        if (bool) {
+          await this.videoService.update(id, body, bool);
+        }
+      } else {
+        await this.videoService.update(id, body, false);
+      }
+    }
+  }
+
+  @Delete('/delete/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiHeader({
+    name: 'admin_token',
+    description: 'Admin token',
+    required: true,
+  })
+  async delete(@Param('id') id: string, @Headers() header: any) {
+    const adminId = await this.adminToken.verifyAdmin(header);
+    if (adminId) {
+      await this.videoService.delete(id);
     }
   }
 }
