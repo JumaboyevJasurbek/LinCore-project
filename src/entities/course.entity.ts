@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   Entity,
   JoinColumn,
@@ -13,7 +14,7 @@ import { Workbook } from './workbook.entity';
 import { WorkbookOpen } from './workbook_open.entity';
 
 @Entity({ name: 'courses' })
-export class CourseEntity {
+export class CourseEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   course_id: string;
 
@@ -52,9 +53,9 @@ export class CourseEntity {
   @OneToMany(() => Workbook, (workbook) => workbook.workbook_course)
   workbook: Workbook[];
 
+  @OneToMany(() => Videos, (video) => video.videos_course)
+  course_videos: Videos[];
+
   @OneToMany(() => CoursesOpenUsers, (user) => user.course_id)
   open_user: CoursesOpenUsers[];
-
-  @OneToMany(() => Videos, (video) => video.video_course)
-  video: Videos[];
 }
