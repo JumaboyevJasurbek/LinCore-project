@@ -54,9 +54,7 @@ export class UserEntity extends BaseEntity {
   image: string;
 
   @ManyToMany(() => CertificateOpenUser)
-  @JoinTable({
-    name: 'certificates_open_users',
-  })
+  @JoinTable()
   user_sertificate: CertificateOpenUser[];
 
   @OneToMany(() => UserTakeWorkbook, (workbook) => workbook.user_id)

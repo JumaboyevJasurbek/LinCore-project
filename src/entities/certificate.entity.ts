@@ -1,9 +1,7 @@
 import {
-  BaseEntity,
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -11,7 +9,7 @@ import { CourseEntity } from './course.entity';
 import { CertificateOpenUser } from './certificate_open_user.entity';
 
 @Entity({ name: 'certificate' })
-export class CertificateEntity extends BaseEntity {
+export class CertificateEntity {
   @PrimaryGeneratedColumn('uuid')
   certificate_id: string;
 
@@ -25,7 +23,7 @@ export class CertificateEntity extends BaseEntity {
   @JoinColumn()
   certificate_course: CourseEntity;
 
-  @ManyToOne(() => CertificateOpenUser)
+  @OneToOne(() => CertificateOpenUser)
   @JoinColumn()
-  certificate_open: CertificateOpenUser[];
+  certificate_open: CertificateOpenUser;
 }
