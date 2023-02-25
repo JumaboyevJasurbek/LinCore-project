@@ -3,8 +3,6 @@ import { UserTakeWorkbook } from './../entities/user_take_workbook.entity';
 import { UserEntity } from './../entities/user.entity';
 import { CoursesOpenUsers } from './../entities/course_open_users.entity';
 import { CourseEntity } from './../entities/course.entity';
-import { CertificateOpenUser } from './../entities/certificate_open_user.entity';
-import { CertificateEntity } from './../entities/certificate.entity';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { Workbook } from 'src/entities/workbook.entity';
@@ -21,8 +19,6 @@ export const connectDb: TypeOrmModuleOptions = {
   database: process.env.DATABASE,
   entities: [
     Workbook,
-    CertificateEntity,
-    CertificateOpenUser,
     CourseEntity,
     CoursesOpenUsers,
     UserEntity,
