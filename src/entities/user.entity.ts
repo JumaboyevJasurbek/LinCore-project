@@ -3,11 +3,14 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CoursesOpenUsers } from './course_open_users.entity';
 import { UserTakeWorkbook } from './user_take_workbook.entity';
+import { CertificateOpenUser } from './certificate_open_user.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
@@ -49,6 +52,12 @@ export class UserEntity extends BaseEntity {
       'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png',
   })
   image: string;
+
+  @ManyToMany(() => CertificateOpenUser)
+  @JoinTable({
+    name: 'certificates_open_users',
+  })
+  user_sertificate: CertificateOpenUser[];
 
   @OneToMany(() => UserTakeWorkbook, (workbook) => workbook.user_id)
   take_workbook: UserTakeWorkbook[];
