@@ -1,49 +1,45 @@
-import { reverse } from 'dns';
-import { UserEntity } from './../../entities/user.entity';
-import { join, extname } from 'path';
-import { TokenMiddleware } from './../../middleware/middleware.service';
-import { Body, Headers } from '@nestjs/common/decorators';
 import { UserTakeWorkbook } from './../../entities/user_take_workbook.entity';
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Response } from 'express';
+import * as fs from 'fs';
+import { Workbook } from 'src/entities/workbook.entity';
 
 @Injectable()
 export class UserTakeBookService {
-  constructor(
-    @InjectRepository(UserTakeWorkbook)
-    private userTakeBook: Repository<UserTakeWorkbook>,
-    private readonly userToken: TokenMiddleware,
-  ) {}
-
-  async findAll(headers: string) {
-    const allWorkBook: any = await UserTakeWorkbook.find({
-      relations: {
-        workbook_id: true,
+  async findOne(id: any, userId: any, res: Response) {
+    const takeWorkbook: UserTakeWorkbook = await UserTakeWorkbook.findOne({
+      where: {
+        workbook_id: id,
+        user_id: userId,
       },
+    }).catch(() => {
+      throw new HttpException('Workbook Not Found', HttpStatus.NOT_FOUND);
     });
 
-    const obj = [...allWorkBook];
-    if (headers) {
-      const active = await UserEntity.findOne({
+    if (takeWorkbook.utw_active) {
+      const workbook = await Workbook.findOne({
         where: {
-          user_id: headers,
+          workbook_id: id,
         },
+      }).catch(() => {
+        throw new HttpException('Workbook Not Found', HttpStatus.NOT_FOUND);
       });
 
-      if (active) {
-        for (let i = 0; i < obj.length; i++) {
-          obj[i].utw_active = true;
-        }
-        return obj;
-      } else {
-        const noactive =
-          (obj[0].utw_active = false) +
-          'swdefrgty' +
-          'wdefrr'.split('').reverse().join('-');
-        return noactive;
-      }
+      const fileStream = fs.createWriteStream(workbook.workbook_link);
+      console.log(fileStream);
+      fileStream.pipe(res);
+
+      await UserTakeWorkbook.createQueryBuilder()
+        .update()
+        .set({
+          utw_active: false,
+        })
+        .where({
+          utw_id: id,
+        })
+        .execute();
+    } else {
+      throw new HttpException('book already taken', HttpStatus.BAD_REQUEST);
     }
-    return obj;
   }
 }
