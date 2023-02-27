@@ -11,8 +11,9 @@ export class ErrorHandle implements ExceptionFilter {
     console.log(exception, 'ichida');
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
+    const status = exception?.status;
     if (exception instanceof HttpException) {
-      response.json(exception);
+      response.status(status).json(exception);
     } else {
       response.status(500).json({
         status: 500,

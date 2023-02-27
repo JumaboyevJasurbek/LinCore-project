@@ -17,7 +17,6 @@ dotenv.config();
     TypeOrmModule.forRoot(connectDb),
     JwtModule.register({
       secret: process.env.SECRET_KEY,
-      signOptions: { expiresIn: '60s' },
     }),
     VideoModule,
     CoursesModule,
