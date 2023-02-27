@@ -43,6 +43,10 @@ export class VideoService {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     });
 
+    if (!course) {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    }
+
     const allVideos: any = await Videos.find({
       relations: {
         videos_course: true,
@@ -181,6 +185,7 @@ export class VideoService {
     if (!findVideo) {
       throw new HttpException('Video Not Found', HttpStatus.NOT_FOUND);
     }
+
     await Videos.createQueryBuilder()
       .update()
       .set({
