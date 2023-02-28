@@ -2,12 +2,9 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { CertificateEntity } from './certificate.entity';
 import { CoursesOpenUsers } from './course_open_users.entity';
 import { Videos } from './video.entity';
 import { Workbook } from './workbook.entity';
@@ -42,10 +39,6 @@ export class CourseEntity extends BaseEntity {
     nullable: false,
   })
   course_sequence: string;
-
-  @OneToOne(() => CertificateEntity)
-  @JoinColumn()
-  course_certificate: CertificateEntity;
 
   @OneToMany(() => WorkbookOpen, (workbook) => workbook.openbook_course)
   workbook_open: WorkbookOpen[];

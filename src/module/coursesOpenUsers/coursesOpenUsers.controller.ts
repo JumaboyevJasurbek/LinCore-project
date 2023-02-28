@@ -59,10 +59,10 @@ export class CoursesOpenController {
 
   @Get('/all' )
   async findAll(@Headers() header: any) {
-    // const adminId = await this.adminToken.verifyAdmin(header);
-    // if(adminId){
+    const adminId = await this.adminToken.verifyAdmin(header);
+    if(adminId){
       return this.coursesOpenService.findAll();
-    // }
+    }
   }
 
 
