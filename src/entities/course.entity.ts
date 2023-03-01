@@ -37,8 +37,9 @@ export class CourseEntity extends BaseEntity {
   @Column({
     type: 'integer',
     nullable: false,
+    unique: true,
   })
-  course_sequence: string;
+  course_sequence: number;
 
   @OneToMany(() => WorkbookOpen, (workbook) => workbook.openbook_course)
   workbook_open: WorkbookOpen[];

@@ -1,12 +1,12 @@
+import { MiddlewareModule } from './../../middleware/middleware.module';
+import { TokenMiddleware } from './../../middleware/middleware.service';
 import { Module } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CoursesController } from './courses.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CourseEntity } from 'src/entities/course.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CourseEntity])],
+  imports: [MiddlewareModule],
   controllers: [CoursesController],
-  providers: [CoursesService],
+  providers: [CoursesService, TokenMiddleware],
 })
 export class CoursesModule {}

@@ -1,16 +1,18 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   Headers,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBody, ApiHeader, ApiNotFoundResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiHeader,
+  ApiNotFoundResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { TokenMiddleware } from 'src/middleware/middleware.service';
 import { CoursesOpenService } from './coursesOpenUsers.service';
 import { CreateCourseOpenDto } from './dto/create-course-open-users.dto';
@@ -19,29 +21,27 @@ import { CreateCourseOpenDto } from './dto/create-course-open-users.dto';
 @ApiTags('Courses Open Users')
 export class CoursesOpenController {
   constructor(
-    private readonly coursesOpenService: CoursesOpenService ,
+    private readonly coursesOpenService: CoursesOpenService,
     private readonly adminToken: TokenMiddleware,
-    ) {}
+  ) {}
 
-  @Post('/add')
+  @Post('/create')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
-    schema : {
-      type : 'object',
-      required: [
-
-      ],
-      properties : {
-        userId : {
+    schema: {
+      type: 'object',
+      required: [],
+      properties: {
+        userId: {
           type: 'string',
-          default:'uuid'
+          default: 'uuid',
         },
-        courseId : {
+        courseId: {
           type: 'string',
-          default:'uuid'
-        }
-      }
-    }
+          default: 'uuid',
+        },
+      },
+    },
   })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
@@ -50,20 +50,13 @@ export class CoursesOpenController {
     description: 'Admin token',
     required: true,
   })
-  async create(@Body() createCourseOpenUserDto: CreateCourseOpenDto , @Headers() header: any ) {
-    // const adminId = await this.adminToken.verifyAdmin(header);
-    // if(adminId){
-      return this.coursesOpenService.create(createCourseOpenUserDto);
-    // }
-  }
-
-  @Get('/all' )
-  async findAll(@Headers() header: any) {
+  async create(
+    @Body() createCourseOpenUserDto: CreateCourseOpenDto,
+    @Headers() header: any,
+  ) {
     const adminId = await this.adminToken.verifyAdmin(header);
-    if(adminId){
-      return this.coursesOpenService.findAll();
+    if (adminId) {
+      return await this.coursesOpenService.create(createCourseOpenUserDto);
     }
   }
-
-
 }

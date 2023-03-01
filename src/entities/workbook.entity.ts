@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -26,7 +27,10 @@ export class Workbook extends BaseEntity {
   })
   workbook_sequence: number;
 
-  @ManyToOne(() => CourseEntity, (course) => course.workbook)
+  @ManyToOne(() => CourseEntity, (course) => course.workbook, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'workbook_course' })
   workbook_course: CourseEntity;
 
   @OneToMany(() => UserTakeWorkbook, (workbook) => workbook.workbook_id)

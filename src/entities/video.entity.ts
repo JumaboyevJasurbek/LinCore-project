@@ -46,8 +46,10 @@ export class Videos extends BaseEntity {
   })
   video_sequence: number;
 
-  @ManyToOne(() => CourseEntity, (course) => course.course_videos)
-  @JoinColumn()
+  @ManyToOne(() => CourseEntity, (course) => course.course_videos, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'videos_course' })
   videos_course: CourseEntity;
 
   @OneToMany(() => UserWatchVideo, (watch) => watch.video_id)
