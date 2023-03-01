@@ -11,6 +11,7 @@ import { MiddlewareModule } from './middleware/middleware.module';
 import { UserTakeBookModule } from './module/user-take-book/user-take-book.module';
 import { UsersModule } from './module/users/users.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { WorkbookModule } from './module/workbook/workbook.module';
 dotenv.config();
 
 @Module({
@@ -32,6 +33,7 @@ dotenv.config();
         password: '',
       },
     }),
+    WorkbookModule,
   ],
 })
 export class AppModule {}
