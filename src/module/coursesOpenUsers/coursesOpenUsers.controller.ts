@@ -51,10 +51,10 @@ export class CoursesOpenController {
     required: true,
   })
   async create(@Body() createCourseOpenUserDto: CreateCourseOpenDto , @Headers() header: any ) {
-    const adminId = await this.adminToken.verifyAdmin(header);
-    if(adminId){
+    // const adminId = await this.adminToken.verifyAdmin(header);
+    // if(adminId){
       return this.coursesOpenService.create(createCourseOpenUserDto);
-    }
+    // }
   }
 
   @Get('/all' )

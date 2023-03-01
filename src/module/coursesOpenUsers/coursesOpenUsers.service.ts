@@ -13,7 +13,7 @@ export class CoursesOpenService {
    async create(createCourseopenUser: CreateCourseOpenDto) {
      
     
-    const user: UserEntity = await UserEntity.findOne({
+    const user: any = await UserEntity.findOne({
       where: {
         user_id: createCourseopenUser.userId
       }
@@ -27,7 +27,7 @@ export class CoursesOpenService {
 
 
 
-    const course: CourseEntity = await CourseEntity.findOne({
+    const course: any = await CourseEntity.findOne({
       where: {
        course_id : createCourseopenUser.courseId
       }
@@ -40,17 +40,16 @@ export class CoursesOpenService {
     }
 
 
-    const userbyCourse = CoursesOpenUsers.findOne({
-      where:{  
-        user_id:{
-          user_id: user.user_id
-        },
-        course_id: {
-          course_id : course.course_id
-        }
-      }
-      
+    const userbyCourse = await CoursesOpenUsers.findOne({
+      where: {
+        course_id :course.course_id ,
+        user_id: user.user_id,
+      },
     })
+    const attheMoment:number = new Date().getTime()
+    console.log(attheMoment - userbyCourse.create_data.getTime());
+    
+    
     if(userbyCourse){
       return 'User alredy buy course' 
     }

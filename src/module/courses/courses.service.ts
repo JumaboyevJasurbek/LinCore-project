@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CourseEntity } from 'src/entities/course.entity';
+import { CoursesOpenUsers } from 'src/entities/course_open_users.entity';
 import { Repository } from 'typeorm';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -15,8 +16,8 @@ export class CoursesService {
     return this.CoursesRepository.save(CreateCourseDto as any);
   }
 
-  findAll() {
-    return this.CoursesRepository.find();
+  async findAll() {
+    return await  this.CoursesRepository.find();
   }
 
   findOne(id: string) {
