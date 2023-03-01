@@ -103,9 +103,17 @@ export class UsersController {
 
   @Get('/statistika')
   @ApiOkResponse()
+  @ApiHeader({
+    name: 'admin_token',
+    description: 'Admin token',
+    required: false,
+  })
   @HttpCode(HttpStatus.OK)
-  async statistika() {
-    return await this.usersService.statistika();
+  async statistika(@Headers() header: any) {
+    const adminId = await this.veridfyToken.verifyAdmin(header);
+    if (adminId) {
+      return await this.usersService.statistika();
+    }
   }
 
   @Get('/')
