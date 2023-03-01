@@ -9,6 +9,8 @@ import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { MiddlewareModule } from './middleware/middleware.module';
 import { UserTakeBookModule } from './module/user-take-book/user-take-book.module';
+import { UsersModule } from './module/users/users.module';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 dotenv.config();
 
 @Module({
@@ -22,6 +24,14 @@ dotenv.config();
     CoursesModule,
     MiddlewareModule,
     UserTakeBookModule,
+    UsersModule,
+    RedisModule.forRoot({
+      config: {
+        host: 'localhost',
+        port: 6379,
+        password: '',
+      },
+    }),
   ],
 })
 export class AppModule {}

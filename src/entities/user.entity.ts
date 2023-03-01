@@ -43,6 +43,19 @@ export class UserEntity extends BaseEntity {
   email: string;
 
   @Column({
+    type: 'character varying',
+    nullable: false,
+  })
+  password: string;
+
+  @Column({
+    type: 'boolean',
+    nullable: false,
+    default: true,
+  })
+  active: boolean;
+
+  @Column({
     type: 'text',
     nullable: false,
     default:

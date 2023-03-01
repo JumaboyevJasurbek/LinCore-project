@@ -1,33 +1,85 @@
-import { UserTakeWorkbook } from './../../entities/user_take_workbook.entity';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Response } from 'express';
 import * as fs from 'fs';
-import { Workbook } from 'src/entities/workbook.entity';
+import { Workbook } from './../../entities/workbook.entity';
+import { CoursesOpenUsers } from './../../entities/course_open_users.entity';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CourseEntity } from 'src/entities/course.entity';
+import { UserEntity } from 'src/entities/user.entity';
+import { UserTakeWorkbook } from 'src/entities/user_take_workbook.entity';
 
 @Injectable()
 export class UserTakeBookService {
-  async findOne(id: any, userId: any, res: Response) {
-    const takeWorkbook: UserTakeWorkbook = await UserTakeWorkbook.findOne({
+  async findOne(user_id: string, workbook_id: string) {
+    const workbook: any = await Workbook.findOne({
       where: {
-        workbook_id: id,
-        user_id: userId,
+        workbook_id,
       },
     }).catch(() => {
       throw new HttpException('Workbook Not Found', HttpStatus.NOT_FOUND);
     });
+    if (!workbook) {
+      throw new HttpException('Workbook Not Found', HttpStatus.NOT_FOUND);
+    }
 
-    if (takeWorkbook.utw_active) {
-      const workbook = await Workbook.findOne({
-        where: {
-          workbook_id: id,
-        },
-      }).catch(() => {
-        throw new HttpException('Workbook Not Found', HttpStatus.NOT_FOUND);
-      });
+    const Course: any = await CourseEntity.findOne({
+      where: {
+        course_id: workbook.workbook_course,
+      },
+    }).catch(() => {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    });
+    if (!Course) {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    }
 
-      const fileStream = fs.createWriteStream(workbook.workbook_link);
-      console.log(fileStream);
-      fileStream.pipe(res);
+    const User: any = await UserEntity.findOne({
+      where: {
+        user_id,
+      },
+    }).catch(() => {
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+
+    });
+    if (!User) {
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+    }
+    const course_open_user = await CoursesOpenUsers.findOne({
+      where: {
+        course_id: Course.course_id,
+        user_id: User.user_id,
+      },
+    }).catch(() => {
+      throw new HttpException(
+        'Course has not been purchased',
+        HttpStatus.NOT_FOUND,
+      );
+    });
+    if (!course_open_user) {
+      throw new HttpException(
+        'Course has not been purchased',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const byWorkbook = await UserTakeWorkbook.findOne({
+      where: {
+        workbook_id: workbook.workbook_id,
+        user_id: User.user_id,
+      },
+    }).catch(() => {
+      throw new HttpException(
+        'User Take Workbook Not Found',
+        HttpStatus.NOT_FOUND,
+      );
+    });
+    if (!byWorkbook) {
+      throw new HttpException(
+        'User Take Workbook Not Found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (byWorkbook.utw_active) {
+      // fs.createWriteStream;
 
       await UserTakeWorkbook.createQueryBuilder()
         .update()
@@ -35,11 +87,15 @@ export class UserTakeBookService {
           utw_active: false,
         })
         .where({
-          utw_id: id,
+          workbook_id: workbook.workbook_id,
         })
         .execute();
     } else {
-      throw new HttpException('book already taken', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Book was previously loaded',
+        HttpStatus.BAD_REQUEST,
+      );
+
     }
   }
 }
