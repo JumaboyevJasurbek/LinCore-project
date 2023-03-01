@@ -22,8 +22,11 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiConsumes,
+  ApiCreatedResponse,
   ApiHeader,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -33,7 +36,7 @@ import {
 export class VideoController {
   constructor(
     private readonly videoService: VideoService,
-    private readonly adminToken: TokenMiddleware,
+    private readonly veridfyToken: TokenMiddleware,
   ) {}
 
   @Post('/create')
@@ -81,6 +84,7 @@ export class VideoController {
   @ApiOperation({ summary: 'Attendance Punch In' })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
+  @ApiCreatedResponse()
   @ApiHeader({
     name: 'admin_token',
     description: 'Admin token',
@@ -92,7 +96,7 @@ export class VideoController {
     @Body() body: CreateVideoDto,
     @Headers() header: any,
   ) {
-    if (await this.adminToken.verifyAdmin(header)) {
+    if (await this.veridfyToken.verifyAdmin(header)) {
       const bool = googleCloud(file);
       if (bool) {
         await this.videoService.create(body, bool);
@@ -103,10 +107,11 @@ export class VideoController {
   @Get('/by_course/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
+  @ApiOkResponse()
   @ApiHeader({ name: 'user_token', description: 'optional', required: false })
   async findAll(@Param('id') course: string, @Headers() header: any) {
     if (header?.user_token) {
-      const userId = await this.adminToken.verifyUser(header);
+      const userId = await this.veridfyToken.verifyUser(header);
       if (userId) {
         return await this.videoService.findAll(course, userId);
       }
@@ -118,10 +123,11 @@ export class VideoController {
   @Get(':id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
+  @ApiOkResponse()
   @ApiHeader({ name: 'user_token', description: 'optional', required: false })
   async findOne(@Param('id') id: string, @Headers() header: any) {
     if (header?.user_token) {
-      const userId = await this.adminToken.verifyUser(header);
+      const userId = await this.veridfyToken.verifyUser(header);
       if (userId) {
         return await this.videoService.findOne(id, userId);
       }
@@ -132,6 +138,7 @@ export class VideoController {
 
   @Patch('/update/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse()
   @ApiBody({
     schema: {
       type: 'object',
@@ -179,7 +186,7 @@ export class VideoController {
     @Body() body: UpdateVideoDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const adminId = await this.adminToken.verifyAdmin(header);
+    const adminId = await this.veridfyToken.verifyAdmin(header);
     if (adminId) {
       if (file) {
         const bool = googleCloud(file);
@@ -196,13 +203,14 @@ export class VideoController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
+  @ApiNoContentResponse()
   @ApiHeader({
     name: 'admin_token',
     description: 'Admin token',
     required: true,
   })
   async delete(@Param('id') id: string, @Headers() header: any) {
-    const adminId = await this.adminToken.verifyAdmin(header);
+    const adminId = await this.veridfyToken.verifyAdmin(header);
     if (adminId) {
       await this.videoService.delete(id);
     }
