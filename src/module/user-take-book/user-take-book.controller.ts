@@ -3,8 +3,10 @@ import { HttpStatus } from '@nestjs/common/enums';
 import { Controller, Get, Param } from '@nestjs/common';
 import { UserTakeBookService } from './user-take-book.service';
 import { Headers, HttpCode } from '@nestjs/common/decorators';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('userTakeBook')
+@ApiTags('User Take Workbook')
 export class UserTakeBookController {
   constructor(
     private readonly userTakeBookService: UserTakeBookService,
