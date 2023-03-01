@@ -37,11 +37,11 @@ export class UserTakeBookService {
       },
     }).catch(() => {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+
     });
     if (!User) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
-
     const course_open_user = await CoursesOpenUsers.findOne({
       where: {
         course_id: Course.course_id,
@@ -80,6 +80,7 @@ export class UserTakeBookService {
 
     if (byWorkbook.utw_active) {
       // fs.createWriteStream;
+
       await UserTakeWorkbook.createQueryBuilder()
         .update()
         .set({
@@ -94,6 +95,7 @@ export class UserTakeBookService {
         'Book was previously loaded',
         HttpStatus.BAD_REQUEST,
       );
+
     }
   }
 }

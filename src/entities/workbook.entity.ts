@@ -23,6 +23,7 @@ export class Workbook extends BaseEntity {
   @Column({
     type: 'integer',
     nullable: false,
+    unique: true,
   })
   workbook_sequence: number;
 
