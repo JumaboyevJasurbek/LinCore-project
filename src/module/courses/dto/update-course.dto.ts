@@ -1,15 +1,47 @@
-import { PartialType } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { PartialType, ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 import { CreateCourseDto } from './create-course.dto';
 
 export class UpdateCourseDto extends PartialType(CreateCourseDto) {
   @IsString()
-  course_title: string;
+  @IsOptional()
+  @ApiProperty({
+    name: 'title',
+    type: 'string',
+    default: '1-dars',
+    required: true,
+  })
+  title: string;
 
   @IsString()
-  course_description: string;
+  @IsOptional()
+  @ApiProperty({
+    name: 'description',
+    type: 'string',
+    default: 'Bu Kurs shunday shunday narsalari bor!!!',
+    required: true,
+  })
+  description: string;
+
   @IsString()
-  course_price: string;
+  @IsOptional()
+  @ApiProperty({
+    name: 'price',
+    type: 'string',
+    default: '1 000 000$',
+    required: true,
+  })
+  price: string;
+
   @IsNumber()
-  course_sequence: number;
+  @IsOptional()
+  @Type(() => Number)
+  @ApiProperty({
+    name: 'sequence',
+    type: 'string',
+    default: '1',
+    required: true,
+  })
+  sequence: number;
 }

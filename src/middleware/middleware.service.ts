@@ -8,16 +8,20 @@ export class TokenMiddleware {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
     const idAndEmail = jwt.verify(headers.admin_token);
+
     if (!idAndEmail) {
-      throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
     const admin = await UserEntity.findOneBy({
       user_id: idAndEmail.id,
       email: idAndEmail.email,
     });
-    if (!admin.email || !admin.active) {
-      throw new HttpException('Siz admin emassiz', HttpStatus.BAD_REQUEST);
+    if (!admin?.email || !admin?.active) {
+      throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
+    // if () {
+
+    // }
     return admin.user_id;
   }
 

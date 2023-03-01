@@ -63,31 +63,29 @@ export class VideoService {
     const newObj = [...allVideos];
 
     if (header) {
-      const active: any  = await CoursesOpenUsers.findOne({
+      const active: any = await CoursesOpenUsers.findOne({
         where: {
           course_id: findCourse.course_id,
           user_id: header,
         },
       }).catch(() => {
-      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
-    });;
+        throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+      });
       if (active) {
-        const attheMoment:number = new Date().getTime()
-        const dataByCourse = active.create_data.getTime()
-        if((attheMoment - dataByCourse) <= 15552000000){ 
+        const attheMoment: number = new Date().getTime();
+        const dataByCourse = active.create_data.getTime();
+        if (attheMoment - dataByCourse <= 15552000000) {
           for (let i = 0; i < newObj.length; i++) {
             newObj[i].video_active = true;
           }
           return newObj;
         } else {
-          await CoursesOpenUsers
-            .createQueryBuilder()
+          await CoursesOpenUsers.createQueryBuilder()
             .delete()
             .from(CoursesOpenUsers)
-            .where({cou_id :active.cou_id })
-            .execute()
+            .where({ cou_id: active.cou_id })
+            .execute();
 
-            
           for (let i = 0; i < newObj.length; i++) {
             newObj[i].video_active = true;
             if (newObj[i].video_sequence > 2) {
@@ -103,10 +101,7 @@ export class VideoService {
 
           return newObj;
         }
-
-        
       } else {
-
         for (let i = 0; i < newObj.length; i++) {
           newObj[i].video_active = true;
           if (newObj[i].video_sequence > 2) {
