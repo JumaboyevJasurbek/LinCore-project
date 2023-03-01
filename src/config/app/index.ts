@@ -4,6 +4,7 @@ class AppConfig {
   readonly host: string;
   readonly port: number;
 }
+console.log();
 
 export const appConfig = registerAs(
   'app',

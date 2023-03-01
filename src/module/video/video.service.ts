@@ -62,20 +62,50 @@ export class VideoService {
     const newObj = [...allVideos];
 
     if (header) {
-      const active = await CoursesOpenUsers.findOne({
+      const active: any  = await CoursesOpenUsers.findOne({
         where: {
           course_id: findCourse.course_id,
           user_id: header,
         },
-      }).catch((e) => console.log(e));
-
+      }).catch(() => {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    });;
       if (active) {
-        for (let i = 0; i < newObj.length; i++) {
-          newObj[i].video_active = true;
+        const attheMoment:number = new Date().getTime()
+        const dataByCourse = active.create_data.getTime()
+        if((attheMoment - dataByCourse) <= 15552000000){ 
+          for (let i = 0; i < newObj.length; i++) {
+            newObj[i].video_active = true;
+          }
+          return newObj;
+        } else {
+          await CoursesOpenUsers
+            .createQueryBuilder()
+            .delete()
+            .from(CoursesOpenUsers)
+            .where({cou_id :active.cou_id })
+            .execute()
+
+            
+          for (let i = 0; i < newObj.length; i++) {
+            newObj[i].video_active = true;
+            if (newObj[i].video_sequence > 2) {
+              newObj[i].video_active = false;
+              const videoname = extname(newObj[i].video_link);
+              newObj[i].video_link =
+                'adsfdhgk' +
+                allVideos.video_link +
+                'adsfh'.split('').reverse().join('.')[0] +
+                videoname;
+            }
+          }
+
+          return newObj;
         }
 
-        return newObj;
+        
       } else {
+
         for (let i = 0; i < newObj.length; i++) {
           newObj[i].video_active = true;
           if (newObj[i].video_sequence > 2) {
