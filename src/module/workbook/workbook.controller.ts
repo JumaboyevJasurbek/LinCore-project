@@ -64,7 +64,7 @@ export class WorkbookController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['file', 'sequence'],
+      required: ['file', 'sequence', 'courseId'],
       properties: {
         file: {
           type: 'string',
@@ -74,12 +74,16 @@ export class WorkbookController {
           type: 'number',
           default: 4,
         },
+        courseId: {
+          type: 'string',
+          default: 'uuid',
+        },
       },
     },
   })
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Attendance Punch In' })
-  @UseInterceptors(FileInterceptor('workbook'))
+  @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile() workbook: Express.Multer.File,
     @Headers() headers: any,
@@ -111,7 +115,6 @@ export class WorkbookController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['file', 'sequence'],
       properties: {
         file: {
           type: 'string',
@@ -120,6 +123,10 @@ export class WorkbookController {
         sequence: {
           type: 'number',
           default: 4,
+        },
+        courseId: {
+          type: 'string',
+          default: 'uuid',
         },
       },
     },

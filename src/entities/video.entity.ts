@@ -43,7 +43,6 @@ export class Videos extends BaseEntity {
   @Column({
     type: 'integer',
     nullable: false,
-    unique: true,
   })
   video_sequence: number;
 

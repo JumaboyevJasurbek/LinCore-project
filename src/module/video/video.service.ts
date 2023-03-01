@@ -1,3 +1,4 @@
+import { UserWatchVideo } from './../../entities/user_watch_video.entity';
 import { extname } from 'path';
 import { CoursesOpenUsers } from './../../entities/course_open_users.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -110,7 +111,7 @@ export class VideoService {
     }
   }
 
-  async findOne(id: string, header) {
+  async findOne(id: string, header: any) {
     const findVideo: any = await Videos.findOne({
       where: { video_id: id },
     }).catch(() => {
@@ -125,11 +126,18 @@ export class VideoService {
     }).catch(() => {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     });
-    console.log(findCourse);
 
     const newObj = { ...findVideo };
 
     if (header) {
+      await UserWatchVideo.createQueryBuilder()
+        .insert()
+        .into(UserWatchVideo)
+        .values({
+          video_id: findVideo.video_id,
+          user_id: header,
+        })
+        .execute();
       const active = await CoursesOpenUsers.findOne({
         where: {
           course_id: findCourse.course_id,
