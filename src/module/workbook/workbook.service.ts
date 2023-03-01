@@ -66,7 +66,7 @@ export class WorkbookService {
       .update()
       .set({
         workbook_sequence: workbookbody.sequence || workbook.workbook_sequence,
-        workbook_id: workbookbody.courseId || workbook.workbook_course,
+        workbook_course: workbookbody.courseId || workbook.workbook_course,
         workbook_link: worklink || workbook.workbook_link,
       })
       .where({

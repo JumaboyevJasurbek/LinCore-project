@@ -15,7 +15,7 @@ export class TokenMiddleware {
       user_id: idAndEmail.id,
       email: idAndEmail.email,
     });
-    if (!admin.email) {
+    if (!admin.email || !admin.active) {
       throw new HttpException('Siz admin emassiz', HttpStatus.BAD_REQUEST);
     }
     return admin.user_id;
@@ -33,8 +33,8 @@ export class TokenMiddleware {
       user_id: idAndEmail.id,
       email: idAndEmail.email,
     });
-    if (!user.email) {
-      throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
+    if (!user.email || !user.active) {
+      throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
     return user.user_id;
   }

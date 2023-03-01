@@ -116,10 +116,9 @@ export class UsersService {
           HttpStatus.UNPROCESSABLE_ENTITY,
         );
       });
-
     const token = jwt.sign({
-      id: newUser.raw.user_id,
-      email: newUser.raw.email,
+      id: newUser?.raw[0]?.user_id,
+      email: newUser?.raw[0]?.email,
     });
 
     this.redis.del(random);
@@ -214,8 +213,8 @@ export class UsersService {
       },
     });
 
-    const activeUser = users.filter((e) => e.active);
-    const delUser = users.filter((e) => !e.active);
+    const activeUser = users.filter((e) => e.active).length;
+    const delUser = users.filter((e) => !e.active).length;
 
     const res = {
       status: 200,
