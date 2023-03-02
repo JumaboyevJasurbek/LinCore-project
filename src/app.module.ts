@@ -8,6 +8,7 @@ import { CoursesModule } from './module/courses/courses.module';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { MiddlewareModule } from './middleware/middleware.module';
+import { CoursesOpenModule } from './module/coursesOpenUsers/coursesOpenUsers.module';
 import { UserTakeBookModule } from './module/user-take-book/user-take-book.module';
 import { UsersModule } from './module/users/users.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
@@ -23,6 +24,7 @@ dotenv.config();
     }),
     VideoModule,
     CoursesModule,
+    CoursesOpenModule,
     MiddlewareModule,
     UserTakeBookModule,
     UsersModule,

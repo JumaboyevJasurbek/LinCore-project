@@ -1,33 +1,80 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { HttpException } from '@nestjs/common/exceptions';
+import { Injectable, HttpStatus } from '@nestjs/common';
 import { CourseEntity } from 'src/entities/course.entity';
-import { Repository } from 'typeorm';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Injectable()
 export class CoursesService {
-  constructor(
-    @InjectRepository(CourseEntity)
-    private readonly CoursesRepository: Repository<CourseEntity>,
-  ) {}
-  create(CreateCourseDto: CreateCourseDto) {
-    return this.CoursesRepository.save(CreateCourseDto as any);
+  async create(body: CreateCourseDto) {
+    await CourseEntity.createQueryBuilder()
+      .insert()
+      .into(CourseEntity)
+      .values({
+        course_description: body.description,
+        course_price: body.price,
+        course_title: body.title,
+        course_sequence: body.sequence,
+      })
+      .execute()
+      .catch(() => {
+        throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+      });
   }
 
-  findAll() {
-    return this.CoursesRepository.find();
+  async findAll() {
+    return await CourseEntity.find().catch(() => {
+      throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
+    });
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} course`;
+  async update(body: UpdateCourseDto, id: string) {
+    const course = await CourseEntity.findOneBy({
+      course_id: id,
+    }).catch(() => {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    });
+    if (!course) {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    await CourseEntity.createQueryBuilder()
+      .update()
+      .set({
+        course_description: body.description || course.course_description,
+        course_price: body.price || course.course_price,
+        course_title: body.title || course.course_title,
+        course_sequence: body.sequence || course.course_sequence,
+      })
+      .where({
+        course_id: id,
+      })
+      .execute()
+      .catch(() => {
+        throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+      });
   }
 
-  update(id: string, UpdateCourseDto: UpdateCourseDto) {
-    return this.CoursesRepository.update(id, UpdateCourseDto as any);
-  }
+  async remove(id: string) {
+    const course = await CourseEntity.findOneBy({
+      course_id: id,
+    }).catch(() => {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    });
+    if (!course) {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    }
 
-  remove(id: string) {
-    return this.CoursesRepository.delete(id);
+    await CourseEntity.createQueryBuilder()
+      .delete()
+      .from(CourseEntity)
+      .where({
+        course_id: id,
+      })
+      .execute()
+      .catch((err) => {
+        console.log(err);
+        throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+      });
   }
 }

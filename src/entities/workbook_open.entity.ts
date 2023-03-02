@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -18,7 +19,10 @@ export class WorkbookOpen extends BaseEntity {
   })
   openbook_link: string;
 
-  @ManyToOne(() => CourseEntity, (course) => course.workbook_open)
+  @ManyToOne(() => CourseEntity, (course) => course.workbook_open, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'openbook_course' })
   openbook_course: CourseEntity;
 
   @Column({
