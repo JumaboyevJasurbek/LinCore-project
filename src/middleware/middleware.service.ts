@@ -16,6 +16,7 @@ export class TokenMiddleware {
       user_id: idAndEmail.id,
       email: idAndEmail.email,
     });
+
     if (!admin?.email || !admin?.active) {
       throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
