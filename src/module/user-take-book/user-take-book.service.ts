@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import { Workbook } from './../../entities/workbook.entity';
 import { CoursesOpenUsers } from './../../entities/course_open_users.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -10,6 +9,9 @@ import { UserTakeWorkbook } from 'src/entities/user_take_workbook.entity';
 export class UserTakeBookService {
   async findOne(user_id: string, workbook_id: string) {
     const workbook: any = await Workbook.findOne({
+      relations: {
+        workbook_course: true,
+      },
       where: {
         workbook_id,
       },
@@ -22,7 +24,7 @@ export class UserTakeBookService {
 
     const Course: any = await CourseEntity.findOne({
       where: {
-        course_id: workbook.workbook_course,
+        course_id: workbook.workbook_course.course_id,
       },
     }).catch(() => {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
@@ -37,7 +39,6 @@ export class UserTakeBookService {
       },
     }).catch(() => {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
-
     });
     if (!User) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
@@ -59,7 +60,6 @@ export class UserTakeBookService {
         HttpStatus.NOT_FOUND,
       );
     }
-
     const byWorkbook = await UserTakeWorkbook.findOne({
       where: {
         workbook_id: workbook.workbook_id,
@@ -77,9 +77,9 @@ export class UserTakeBookService {
         HttpStatus.NOT_FOUND,
       );
     }
-
+    console.log(byWorkbook);
     if (byWorkbook.utw_active) {
-      // fs.createWriteStream;
+      //
 
       await UserTakeWorkbook.createQueryBuilder()
         .update()
@@ -95,7 +95,6 @@ export class UserTakeBookService {
         'Book was previously loaded',
         HttpStatus.BAD_REQUEST,
       );
-
     }
   }
 }

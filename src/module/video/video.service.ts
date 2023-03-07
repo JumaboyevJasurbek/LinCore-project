@@ -49,9 +49,6 @@ export class VideoService {
     }
 
     const allVideos: any = await Videos.find({
-      relations: {
-        videos_course: true,
-      },
       where: {
         videos_course: findCourse,
       },
@@ -138,6 +135,7 @@ export class VideoService {
 
   async findOne(id: string, header: any) {
     const findVideo: any = await Videos.findOne({
+      relations: { videos_course: true },
       where: { video_id: id },
     }).catch(() => {
       throw new HttpException('Video Not Found', HttpStatus.NOT_FOUND);
@@ -147,11 +145,11 @@ export class VideoService {
       throw new HttpException('Video Not Found', HttpStatus.NOT_FOUND);
     }
     const findCourse: any = await CourseEntity.findOneBy({
-      course_id: findVideo.videos_course?.course_id,
+      course_id: findVideo.videos_course.course_id,
     }).catch(() => {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     });
-
+    delete findVideo.videos_course;
     const newObj = { ...findVideo };
 
     if (header) {
@@ -169,7 +167,6 @@ export class VideoService {
           user_id: header,
         },
       }).catch((e) => console.log(e));
-
       if (active) {
         newObj.video_active = true;
 

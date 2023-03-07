@@ -59,7 +59,6 @@ export class CoursesOpenService {
     }).catch(() => {
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     });
-
     const CoursesOpenUser = await CoursesOpenUsers.createQueryBuilder()
       .insert()
       .into(CoursesOpenUsers)
@@ -78,10 +77,10 @@ export class CoursesOpenService {
         .insert()
         .into(UserTakeWorkbook)
         .values({
-          utw_connection: CoursesOpenUser.raw[0].create_data,
+          utw_connection: CoursesOpenUser.raw[0].created_at,
           utw_active: true,
           workbook_id: e.workbook_id as any,
-          user_id: user,
+          user_id: user.user_id,
         })
         .execute()
         .catch(() => {

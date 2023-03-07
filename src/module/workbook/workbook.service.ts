@@ -8,9 +8,9 @@ import { HttpException } from '@nestjs/common';
 @Injectable()
 export class WorkbookService {
   async findAll() {
-    return await CourseEntity.find({
-      relations: {
-        workbook: true,
+    return await Workbook.find({
+      order: {
+        workbook_sequence: 'ASC',
       },
     });
   }

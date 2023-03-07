@@ -92,8 +92,6 @@ export class WorkbookController {
     if (workbook) {
       const admin = await this.adminToken.verifyAdmin(headers);
       if (admin) {
-        console.log(workbook);
-
         const workLink: any = googleCloud(workbook);
         const ext = extname(workLink);
         if (ext == '.pdf') {
