@@ -13,6 +13,7 @@ import { UserTakeBookModule } from './module/user-take-book/user-take-book.modul
 import { UsersModule } from './module/users/users.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { WorkbookModule } from './module/workbook/workbook.module';
+import { WorkbookOpenModule } from './module/workbook_open/workbook_open.module';
 dotenv.config();
 
 @Module({
@@ -36,6 +37,7 @@ dotenv.config();
       },
     }),
     WorkbookModule,
+    WorkbookOpenModule,
   ],
 })
 export class AppModule {}
