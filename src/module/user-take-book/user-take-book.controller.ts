@@ -3,9 +3,9 @@ import { HttpStatus } from '@nestjs/common/enums';
 import { Controller, Get, Param } from '@nestjs/common';
 import { UserTakeBookService } from './user-take-book.service';
 import { Headers, HttpCode } from '@nestjs/common/decorators';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 
-@Controller('userTakeBook')
+@Controller('user_take_book')
 @ApiTags('User Take Workbook')
 export class UserTakeBookController {
   constructor(
@@ -15,6 +15,11 @@ export class UserTakeBookController {
 
   @Get('/get/:id')
   @HttpCode(HttpStatus.OK)
+  @ApiHeader({
+    name: 'user_token',
+    description: 'User token',
+    required: true,
+  })
   async findOne(@Headers() headers: any, @Param('id') param: string) {
     const userId = await this.userToken.verifyUser(headers);
     if (userId) {

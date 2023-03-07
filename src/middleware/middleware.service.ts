@@ -13,15 +13,15 @@ export class TokenMiddleware {
       throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
     const admin = await UserEntity.findOneBy({
-      user_id: idAndEmail.id,
-      email: idAndEmail.email,
+      user_id: idAndEmail?.id,
+      email: idAndEmail?.email,
     });
     if (!admin?.email || !admin?.active) {
       throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
-    // if () {
-
-    // }
+    if (admin?.email !== 'ahmadjonovakmal079@gmail.com') {
+      throw new HttpException('Siz Admin emasiz', HttpStatus.BAD_REQUEST);
+    }
     return admin.user_id;
   }
 
@@ -34,10 +34,10 @@ export class TokenMiddleware {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
     const user = await UserEntity.findOneBy({
-      user_id: idAndEmail.id,
-      email: idAndEmail.email,
+      user_id: idAndEmail?.id,
+      email: idAndEmail?.email,
     });
-    if (!user.email || !user.active) {
+    if (!user?.email || !user?.active) {
       throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
     return user.user_id;

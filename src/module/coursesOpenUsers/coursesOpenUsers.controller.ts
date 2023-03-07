@@ -17,7 +17,7 @@ import { TokenMiddleware } from 'src/middleware/middleware.service';
 import { CoursesOpenService } from './coursesOpenUsers.service';
 import { CreateCourseOpenDto } from './dto/create-course-open-users.dto';
 
-@Controller('coursesOpenUsers')
+@Controller('courses_open_users')
 @ApiTags('Courses Open Users')
 export class CoursesOpenController {
   constructor(

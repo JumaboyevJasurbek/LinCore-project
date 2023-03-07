@@ -23,7 +23,11 @@ export class CoursesService {
   }
 
   async findAll() {
-    return await CourseEntity.find().catch(() => {
+    return await CourseEntity.find({
+      order: {
+        course_sequence: 'ASC',
+      },
+    }).catch(() => {
       throw new HttpException('BAD GATEWAY', HttpStatus.BAD_GATEWAY);
     });
   }

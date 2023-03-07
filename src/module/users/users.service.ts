@@ -206,13 +206,16 @@ export class UsersService {
   }
 
   async statistika() {
-    const users: UserEntity[] = await UserEntity.find();
+    const allUsers: UserEntity[] = await UserEntity.find();
     const takeCourse: CoursesOpenUsers[] = await CoursesOpenUsers.find({
       relations: {
         user_id: true,
       },
     });
 
+    const users = allUsers.filter(
+      (e) => e.email !== 'ahmadjonovakmal079@gmail.com',
+    );
     const activeUser = users.filter((e) => e.active).length;
     const delUser = users.filter((e) => !e.active).length;
 
