@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ErrorHandle());
   app.setGlobalPrefix('api/v1');
-
+  console.log('ishladi');
   const config = app.get(ConfigService);
   const host = config.getOrThrow('app.host');
   const port = config.getOrThrow('app.port');
